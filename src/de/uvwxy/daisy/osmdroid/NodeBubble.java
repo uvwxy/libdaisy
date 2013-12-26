@@ -71,28 +71,28 @@ public class NodeBubble extends DefaultInfoWindow {
 	}
 
 	@Override
-	public void onOpen(ExtendedOverlayItem item) {
+	public void onOpen(Object item) {
 		super.onOpen(item);
 		Log.i("NODEBUBBLE", "onOpen");
 		imageUpdaterRunning = true;
-		Object o = item.getRelatedObject();
+		Object o = ((ExtendedOverlayItem)item).getRelatedObject();
 		if (o == null) {
 			Log.i("NODEBUBBLE", "Object was null");
 			return;
 		}
 
 		if (o instanceof NodeLocationData) {
-			mNodeLocData = (NodeLocationData) item.getRelatedObject();
+			mNodeLocData = (NodeLocationData) ((ExtendedOverlayItem)item).getRelatedObject();
 			setupNodeLocBubble();
 		}
 
 		if (o instanceof Image) {
-			mImage = (Image) item.getRelatedObject();
+			mImage = (Image) ((ExtendedOverlayItem)item).getRelatedObject();
 			setupImageBubble();
 		}
 
 		if (o instanceof Annotation) {
-			mAnnotation = (Annotation) item.getRelatedObject();
+			mAnnotation = (Annotation) ((ExtendedOverlayItem)item).getRelatedObject();
 			setupAnnotationBubble();
 		}
 	}

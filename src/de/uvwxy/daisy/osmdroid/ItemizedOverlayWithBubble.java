@@ -10,14 +10,17 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.safecanvas.ISafeCanvas;
+import org.osmdroid.views.safecanvas.SafeTranslatedCanvas;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Paint.Style;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 import de.uvwxy.daisy.proto.Messages.Annotation;
 import de.uvwxy.daisy.proto.Messages.ChatMessage;
@@ -41,9 +44,12 @@ public class ItemizedOverlayWithBubble<Item extends OverlayItem> extends Itemize
 	protected InfoWindow mBubble; //only one for all items of this overlay => one at a time
 	protected OverlayItem mItemWithBubble; //the item currently showing the bubble. Null if none. 
 
+	private static final SafeTranslatedCanvas sSafeCanvas = new SafeTranslatedCanvas();
+
 	static int layoutResId = 0;
 
-	public ItemizedOverlayWithBubble(final Context context, final List<Item> aList, final MapView mapView, final InfoWindow bubble) {
+	public ItemizedOverlayWithBubble(final Context context, final List<Item> aList, final MapView mapView,
+			final InfoWindow bubble) {
 		super(context, aList, new OnItemGestureListener<Item>() {
 			@Override
 			public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
@@ -66,7 +72,8 @@ public class ItemizedOverlayWithBubble<Item extends OverlayItem> extends Itemize
 			if (layoutResId == 0) {
 				layoutResId = context.getResources().getIdentifier("layout/bonuspack_bubble", null, packageName);
 				if (layoutResId == 0)
-					Log.e(BonusPackHelper.LOG_TAG, "ItemizedOverlayWithBubble: layout/bonuspack_bubble not found in " + packageName);
+					Log.e(BonusPackHelper.LOG_TAG, "ItemizedOverlayWithBubble: layout/bonuspack_bubble not found in "
+							+ packageName);
 			}
 			mBubble = new DefaultInfoWindow(layoutResId, mapView);
 		}
@@ -161,6 +168,13 @@ public class ItemizedOverlayWithBubble<Item extends OverlayItem> extends Itemize
 		final int size = mItemList.size() - 1;
 		final Point mCurScreenCoords = new Point();
 
+		sSafeCanvas.setCanvas(canvas);
+
+		// Find the screen offset
+		Rect screenRect = mapView.getProjection().getScreenRect();
+		sSafeCanvas.xOffset = -screenRect.left;
+		sSafeCanvas.yOffset = -screenRect.top;
+
 		Paint p = new Paint();
 		p.setColor(Color.GRAY);
 		p.setAntiAlias(true);
@@ -201,23 +215,27 @@ public class ItemizedOverlayWithBubble<Item extends OverlayItem> extends Itemize
 						tempLoc = ((ChatMessage) e.getRelatedObject()).getLocation();
 					}
 
-					pj.toMapPixels(item.mGeoPoint, mCurScreenCoords);
+					pj.toMapPixels(item.getPoint(), mCurScreenCoords);
 
 					canvas.drawCircle(mCurScreenCoords.x, mCurScreenCoords.y, 6, p);
 					p.setStrokeWidth(1);
 					p.setColor(Color.RED);
-					canvas.drawLine(mCurScreenCoords.x, mCurScreenCoords.y - 3, mCurScreenCoords.x, mCurScreenCoords.y + 3, p);
-					canvas.drawLine(mCurScreenCoords.x - 3, mCurScreenCoords.y, mCurScreenCoords.x + 3, mCurScreenCoords.y, p);
+					canvas.drawLine(mCurScreenCoords.x, mCurScreenCoords.y - 3, mCurScreenCoords.x,
+							mCurScreenCoords.y + 3, p);
+					canvas.drawLine(mCurScreenCoords.x - 3, mCurScreenCoords.y, mCurScreenCoords.x + 3,
+							mCurScreenCoords.y, p);
 
 					if (tempLoc != null) {
 						double accuracy = tempLoc.getAccuracy();
 						p.setColor(Color.YELLOW);
 						p.setAlpha(50);
-						canvas.drawCircle(mCurScreenCoords.x, mCurScreenCoords.y, (float) accuracy * pj.metersToEquatorPixels(1), p);
+						canvas.drawCircle(mCurScreenCoords.x, mCurScreenCoords.y,
+								(float) accuracy * pj.metersToEquatorPixels(1), p);
 						p.setColor(Color.BLACK);
 						p.setAlpha(255);
 						p.setStyle(Style.STROKE);
-						canvas.drawCircle(mCurScreenCoords.x, mCurScreenCoords.y, (float) accuracy * pj.metersToEquatorPixels(1), p);
+						canvas.drawCircle(mCurScreenCoords.x, mCurScreenCoords.y,
+								(float) accuracy * pj.metersToEquatorPixels(1), p);
 						p.setStyle(Style.FILL_AND_STROKE);
 
 					}
@@ -265,14 +283,14 @@ public class ItemizedOverlayWithBubble<Item extends OverlayItem> extends Itemize
 		for (int i = size; i >= 0; i--) {
 			final Item item = getItem(i);
 			if (item != mItemWithBubble) {
-				pj.toMapPixels(item.mGeoPoint, mCurScreenCoords);
-				onDrawItem(canvas, item, mCurScreenCoords);
+				pj.toMapPixels(item.getPoint(), mCurScreenCoords);
+				onDrawItem(sSafeCanvas, item, mCurScreenCoords, 0f);
 			}
 		}
 		//draw focused item last:
 		if (mItemWithBubble != null) {
-			pj.toMapPixels(mItemWithBubble.mGeoPoint, mCurScreenCoords);
-			onDrawItem(canvas, (Item) mItemWithBubble, mCurScreenCoords);
+			pj.toMapPixels(mItemWithBubble.getPoint(), mCurScreenCoords);
+			onDrawItem(sSafeCanvas, (Item) mItemWithBubble, mCurScreenCoords, 0f);
 		}
 	}
 
