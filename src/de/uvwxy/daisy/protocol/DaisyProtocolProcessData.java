@@ -2,12 +2,12 @@ package de.uvwxy.daisy.protocol;
 
 import java.io.IOException;
 
-import com.google.common.base.Preconditions;
-
 import android.content.Context;
 import android.util.Log;
+
+import com.google.common.base.Preconditions;
+
 import de.uvwxy.daisy.proto.Messages.DaisyProtocolMessage;
-import de.uvwxy.daisy.proto.Messages.DataHandshake;
 import de.uvwxy.daisy.proto.Messages.DataReply;
 
 public class DaisyProtocolProcessData {

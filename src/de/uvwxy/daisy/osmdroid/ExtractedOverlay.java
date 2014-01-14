@@ -6,7 +6,6 @@ import java.util.List;
 import org.osmdroid.bonuspack.overlays.ExtendedOverlayItem;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.OverlayItem;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,9 +16,8 @@ import de.uvwxy.daisy.proto.ProtoHelper;
 import de.uvwxy.daisy.protocol.DaisyData;
 
 public class ExtractedOverlay<E> {
-	private ItemizedOverlayWithBubble<ExtendedOverlayItem> mMyLocationOverlay;
 	private IOverlayExtractor<E> extractor;
-	private ItemizedOverlayWithBubble overlay;
+	private ItemizedOverlayWithBubble<ExtendedOverlayItem> overlay;
 
 	public ExtractedOverlay(IOverlayExtractor<E> extractor, Context ctx, MapView mv, Activity act, DaisyData data) {
 		Preconditions.checkNotNull(extractor);
@@ -30,7 +28,7 @@ public class ExtractedOverlay<E> {
 		this.extractor = extractor;
 	}
 
-	public ItemizedOverlayWithBubble<OverlayItem> getOverlay() {
+	public ItemizedOverlayWithBubble<ExtendedOverlayItem> getOverlay() {
 		return overlay;
 	}
 

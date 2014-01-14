@@ -81,6 +81,7 @@ public class DaisyProtocolRoutinesMedia {
 		return efdb.build();
 	}
 
+	@SuppressWarnings("resource")
 	public static void sendFileAsChunks(FileChunk fc, AConnection c, DaisyData data, Context ctx) throws IOException {
 		File f = getFileFromFC(fc, data);
 

@@ -10,7 +10,6 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.safecanvas.ISafeCanvas;
 import org.osmdroid.views.safecanvas.SafeTranslatedCanvas;
 
 import android.content.Context;
@@ -162,6 +161,7 @@ public class ItemizedOverlayWithBubble<Item extends OverlayItem> extends Itemize
 		hideBubble();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public synchronized void draw(final Canvas canvas, final MapView mapView, final boolean shadow) {
 		final Projection pj = mapView.getProjection();

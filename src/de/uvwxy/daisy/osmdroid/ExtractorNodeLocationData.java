@@ -2,9 +2,7 @@ package de.uvwxy.daisy.osmdroid;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import de.uvwxy.daisy.proto.Messages.Location;
-import de.uvwxy.daisy.proto.Messages.NodeCommunicationData;
 import de.uvwxy.daisy.proto.Messages.NodeLocationData;
 import de.uvwxy.daisy.proto.ProtoHelper;
 import de.uvwxy.daisy.protocol.DaisyData;

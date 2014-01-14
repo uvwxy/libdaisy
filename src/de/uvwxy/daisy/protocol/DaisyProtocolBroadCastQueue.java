@@ -33,13 +33,6 @@ public class DaisyProtocolBroadCastQueue {
 		this.ctx = ctx;
 	}
 
-	private Object externalConnectionLock = new Object();
-	private boolean isExternallyLock = false;
-
-	public void setExternallyLock(boolean isExternallyLock) {
-		this.isExternallyLock = isExternallyLock;
-	}
-
 	class SyncAllPeersTask extends AsyncTask<String, Integer, Void> {
 
 		@Override
@@ -89,6 +82,7 @@ public class DaisyProtocolBroadCastQueue {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void syncWithAllPeersMedia(String ommitUUID) {
 		ArrayList<Peer> uniquePeers = getUniquePeerList(data, data.getPeersList());
 		Log.i("SYNC", "Will sync with " + uniquePeers.size() + "connections");
@@ -114,7 +108,8 @@ public class DaisyProtocolBroadCastQueue {
 			}
 
 			// only add if not present and not us
-			if (!ProtoObject.containsPeerWithAddress(uniquePeers, p) && !p.getPeerNameTag().getUuid().equals(data.getTag().getUuid())) {
+			if (!ProtoObject.containsPeerWithAddress(uniquePeers, p)
+					&& !p.getPeerNameTag().getUuid().equals(data.getTag().getUuid())) {
 				uniquePeers.add(p);
 			}
 		}
@@ -129,7 +124,8 @@ public class DaisyProtocolBroadCastQueue {
 
 		data.log2bus("SYNC", "Starting Sync with " + p.getPeerNameTag().getUuid());
 
-		DaisyNetwork.connect(ctx, data, daisyNet, new DaisyProtocolStartSyncRequest(data, ctx, p.getPeerNameTag()), p, commLock);
+		DaisyNetwork.connect(ctx, data, daisyNet, new DaisyProtocolStartSyncRequest(data, ctx, p.getPeerNameTag()), p,
+				commLock);
 
 		try {
 			Log.i("QUEUE", "Waiting on commLock..");
@@ -154,7 +150,8 @@ public class DaisyProtocolBroadCastQueue {
 
 		data.log2bus("SYNC", "Starting Sync with " + p.getPeerNameTag().getUuid());
 
-		DaisyNetwork.connect(ctx, data, daisyNet, new DaisyProtocolStartMediaRequest(data, ctx, p.getPeerNameTag()), p, commLock);
+		DaisyNetwork.connect(ctx, data, daisyNet, new DaisyProtocolStartMediaRequest(data, ctx, p.getPeerNameTag()), p,
+				commLock);
 		try {
 			Log.i("QUEUE", "Waiting on commLock..");
 			try {

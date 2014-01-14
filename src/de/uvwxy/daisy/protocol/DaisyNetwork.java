@@ -140,6 +140,7 @@ public class DaisyNetwork {
 
 		}
 	};
+	@SuppressWarnings("unused")// TODO!
 	private IConnectHandler wifiP2pConnect = new IConnectHandler() {
 
 		@Override

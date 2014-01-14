@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.common.base.Preconditions;
 import com.squareup.picasso.Picasso;
@@ -37,6 +36,7 @@ public class NodeBubble extends DefaultInfoWindow {
 	private Annotation mAnnotation;
 
 	private Context ctx;
+	@SuppressWarnings("unused")
 	private Activity act;
 	private DaisyData data;
 
@@ -120,10 +120,6 @@ public class NodeBubble extends DefaultInfoWindow {
 				return;
 			}
 
-			if (path == null) {
-				return;
-			}
-
 			Picasso.with(ctx) //
 					.load(new File(path)) //
 					.error(R.drawable.missing_image) //
@@ -150,8 +146,8 @@ public class NodeBubble extends DefaultInfoWindow {
 		// Fetch the thumbnail in background
 		if (mNodeLocData != null && mNodeLocData.getImagePathCount() > 0) {
 			imageView = (ImageView) mView.findViewById(R.id.bubble_image);
-			int dp = 65;
-			int pix = BitmapTools.dipToPixels(ctx, dp);
+			//int dp = 65;
+			// int pix = BitmapTools.dipToPixels(ctx, dp);
 			imageView.setVisibility(View.VISIBLE);
 			String path = FileTools.getAndCreateExternalFolder(DaisyData.IMAGES_FOLDER) + data.getIdAndTimeStamp() + "/" + mNodeLocData.getImagePath(0);
 			Picasso.with(ctx) //
@@ -176,8 +172,8 @@ public class NodeBubble extends DefaultInfoWindow {
 	private void setupImageBubble() {
 		if (mImage != null) {
 			imageView = (ImageView) mView.findViewById(R.id.bubble_image);
-			int dp = 65;
-			int pix = BitmapTools.dipToPixels(ctx, dp);
+			//int dp = 65;
+			//int pix = BitmapTools.dipToPixels(ctx, dp);
 			imageView.setVisibility(View.VISIBLE);
 			final String path = FileTools.getAndCreateExternalFolder(DaisyData.IMAGES_FOLDER) + data.getIdAndTimeStamp() + "/" + mImage.getImagePath();
 			Picasso.with(ctx) //
@@ -209,8 +205,8 @@ public class NodeBubble extends DefaultInfoWindow {
 		if (showImage) {
 			imageView = (ImageView) mView.findViewById(R.id.bubble_image);
 
-			int dp = 28;
-			int pix = BitmapTools.dipToPixels(ctx, dp);
+			//int dp = 28;
+			//int pix = BitmapTools.dipToPixels(ctx, dp);
 			imageView.setVisibility(View.VISIBLE);
 
 			Picasso.with(ctx) //

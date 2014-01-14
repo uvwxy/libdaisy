@@ -1,26 +1,17 @@
 package de.uvwxy.daisy.proto;
 
-import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 
 import org.apache.http.util.ByteArrayBuffer;
 
 import com.google.common.base.Preconditions;
-import com.google.protobuf.ByteString;
 
 import de.uvwxy.daisy.proto.Messages.Location;
-import de.uvwxy.daisy.proto.Messages.NodeCommunicationData;
 import de.uvwxy.daisy.proto.Messages.NodeLocationData;
-import de.uvwxy.daisy.proto.Messages.SensorsDataCollectionMsg;
-import de.uvwxy.daisy.protocol.DaisyData;
-import de.uvwxy.daisy.sensornode.SensorNetworkMessageParser;
-import de.uvwxy.xbee.apimode.messages.APIMessage;
-import de.uvwxy.xbee.apimode.messages.MessageID;
-import de.uvwxy.xbee.apimode.messages.MsgRXPacket16;
-import de.uvwxy.xbee.apimode.messages.MsgRXPacket64;
 
 public class ProtoHelper {
 
+	@SuppressWarnings("unused")
 	private static final String MD5 = "MD5";
 
 	public static String getDescription(NodeLocationData nld) {
@@ -74,6 +65,7 @@ public class ProtoHelper {
 	 * @param md
 	 * @param loc
 	 */
+	@SuppressWarnings("unused")
 	private static void updateLocationDigest(MessageDigest md, Location loc) {
 		ByteArrayBuffer bab = new ByteArrayBuffer(100);
 
@@ -97,15 +89,16 @@ public class ProtoHelper {
 	 * @param md
 	 * @param l
 	 */
+	@SuppressWarnings("unused")
 	private static void updateLongDigest(MessageDigest md, long l) {
 		for (int i = 0; i < 7; i++) {
 			md.update((byte) (l >>> 7));
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static void updateFloatDigest(MessageDigest md, float f) {
-		md.update(new Float(f).toString(f).getBytes());
-
+		md.update(Float.toString(f).getBytes());
 	}
 
 }
